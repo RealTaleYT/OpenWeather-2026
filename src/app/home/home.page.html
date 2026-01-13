@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Open Weather
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,16 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Open Weather</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <strong>Selecciona una ciudad:</strong>
+    <ion-select [(ngModel)]="selectedCity" (ionChange)="onCityChange($event)">
+      <ion-select-option *ngFor="let city of cities" [value]="city">
+        {{ city.name }}
+      </ion-select-option>
+    </ion-select>
   </div>
 </ion-content>
