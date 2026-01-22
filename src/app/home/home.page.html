@@ -5,20 +5,73 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
+<ion-text>Welcome to Open Weather, Watch the Weather a city or your location</ion-text>
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Open Weather</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <div id="container">
-    <strong>Selecciona una ciudad:</strong>
-    <ion-select [(ngModel)]="selectedCity" (ionChange)="onCityChange($event)">
-      <ion-select-option *ngFor="let city of cities" [value]="city">
-        {{ city.name }}
+  <div class="ion-float-end ion-margin-end">
+    <strong>Change data language</strong>
+    <ion-select (ionChange)="changeLanguage($event)" placeholder="Spanish">
+      <ion-select-option *ngFor="let l of lang" [value]="l.value">
+        {{ l.name }}
       </ion-select-option>
     </ion-select>
   </div>
+  <ion-grid class="ion-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+        <strong>Select a city:</strong>
+        <ion-select (ionChange)="onCityChange($event)">
+          <ion-select-option *ngFor="let city of cities" [value]="city">
+            {{ city.name }}
+          </ion-select-option>
+        </ion-select>
+        <ion-button (click)="getWeather()" id="btnBuscar">Watch Weather</ion-button>
+        <h2>Or if you prefer, use your location</h2>
+        <ion-button (click)="getWeatherByLocation()" id="btnLocalizacion">Use my location</ion-button>
+        <h2>Today</h2>
+        <ion-card *ngFor="let hour of todayForecast" class="weather-card ion-text-center">
+          <ion-card-content class="weather-card-content ">
+            <div class="hour-header">
+              <h3>{{ hour.dt_txt | date:'HH:mm' }}</h3>
+              <img 
+                class="weather-icon" 
+                [src]="'https://openweathermap.org/img/wn/' + hour.weather[0].icon + '@2x.png'" 
+                [alt]="hour.weather[0].description">
+            </div>
+            <p class="temp">🌡 {{ hour.main.temp }} °C</p>
+            <p class="wind">🌬 {{ hour.wind.speed }} m/s</p>
+            <p class="desc">☁ {{ hour.weather[0].description | weatherDesc| titlecase}}</p>
+          </ion-card-content>
+        </ion-card>
+        <h2>Next days</h2>
+        <ion-accordion-group>
+          <ion-accordion *ngFor="let day of nextDays">
+            <ion-item slot="header">
+              <ion-label>
+                {{ formatDate(day.date) }}
+              </ion-label>
+            </ion-item>
+            <div slot="content">
+              <ion-item *ngFor="let hour of day.hours" class="accordion-hour">
+                <img 
+                  class="weather-icon" 
+                  [src]="'https://openweathermap.org/img/wn/' + hour.weather[0].icon + '@2x.png'" 
+                  [alt]="hour.weather[0].description">
+                <ion-label>
+                  <strong>{{ hour.dt_txt | date:'HH:mm' }}</strong> → 
+                  <span class="temp">🌡 {{ hour.main.temp }} °C</span> | 
+                  <span class="wind">💨 {{ hour.wind.speed }} m/s</span> | 
+                  <span class="desc">☁ {{ hour.weather[0].description | weatherDesc | titlecase}}</span>|
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
